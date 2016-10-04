@@ -7,15 +7,21 @@ import { Hero } from './hero';
 
 @Injectable()
 export class HeroService {
-    private heroesUrl = "/heroes";
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(private http: Http) { }
 
     getHeroes(): Promise<Hero[]> {
-        return this.http.get(this.heroesUrl)
+        return this.http.get('/heroes')
             .toPromise()
             .then(response => response.json() as Hero[])
+            .catch(this.handleError);
+    }
+
+    update(hero: Hero): Promise<Hero> {
+        return this.http.post( '/hero', JSON.stringify(hero), {headers: this.headers})
+            .toPromise()
+            .then(() => hero)
             .catch(this.handleError);
     }
 
