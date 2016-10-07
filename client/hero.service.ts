@@ -19,10 +19,25 @@ export class HeroService {
     }
 
     update(hero: Hero): Promise<Hero> {
-        return this.http.post( '/hero', JSON.stringify(hero), {headers: this.headers})
+        return this.http.put( '/hero', JSON.stringify(hero), {headers: this.headers})
             .toPromise()
             .then(() => hero)
             .catch(this.handleError);
+    }
+
+    create(heroName: string): Promise<Hero> {
+        return this.http.post( '/hero', JSON.stringify({name: heroName}), {headers: this.headers})
+            .toPromise()
+            .then(response => response.json() as Hero)
+            .catch(this.handleError);
+    }
+
+    delete(hero: Hero): Promise<Hero> {
+        const deleteUrl = '/hero/${hero.id}';
+        return this.http.delete(deleteUrl, {headers: this.headers})
+        .toPromise()
+        .then(() => hero)
+        .catch(this.handleError);
     }
 
     getHero(id: number): Promise<Hero> {
